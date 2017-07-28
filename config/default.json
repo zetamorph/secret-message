@@ -1,0 +1,10 @@
+{
+  "dbConfig": {
+    "host": "localhost",
+    "port": 27017,
+    "name": "secret-message"
+  },
+  "appConfig": {
+    "port": 8000
+  }
+}
