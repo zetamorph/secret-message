@@ -11,8 +11,16 @@ export interface IMessageModel extends IMessage, Document {
 }
 
 export const messageSchema: Schema = new Schema({
-  sender: String,
-  text: String,
+  sender: {
+    maxlength: 30,
+    type: String,
+  },
+  text: {
+    maxlength: 500,
+    minlength: 5,
+    required: true,
+    type: String,
+  },
   timestamp: Number,
 });
 

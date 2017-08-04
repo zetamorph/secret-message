@@ -1,19 +1,18 @@
 import { Request, Response } from "express";
-import { Message, ObjectId } from "./../models/message.model";
+import Message, { ObjectId } from "./../models/message.model";
 
 export async function getMessage(req: Request, res: Response) {
   const id = new ObjectId(req.params.id);
   try {
-    const messageData = await Message.findById(id);
-    if (!messageData) {
+    const message = await Message.findByIdAndRemove(id);
+    if (!message) {
       res
         .status(404)
         .end();
     }
-    const removed = await Message.findByIdAndRemove(id);
     res
       .status(200)
-      .send(messageData);
+      .send(message);
   } catch (error) {
     console.log(error);
     res

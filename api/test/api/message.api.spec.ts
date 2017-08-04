@@ -4,7 +4,7 @@ import * as mocha from "mocha";
 import * as mongoose from "mongoose";
 import app from "./../../src/index";
 import { IMessage } from "./../../src/interfaces/message.interface";
-import { Message, IMessageModel, ObjectId } from "./../../src/models/message.model";
+import Message, { IMessageModel, ObjectId } from "./../../src/models/message.model";
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -15,7 +15,7 @@ before((done) => {
   });
 });
 
-describe("Message", () => {
+describe("Endpoint: /messages", () => {
 
   describe("GET /messages/:messageId", () => {
 
@@ -23,12 +23,12 @@ describe("Message", () => {
 
     beforeEach((done) => {
       Message.create({ sender: "Johannes", text: "Meet me at sunrise in our spot" })
-        .then((created) => {
+        .then((created: IMessageModel) => {
           message = created;
           done();
         })
-        .catch((err) => {
-          throw(err);
+        .catch((err: any) => {
+          throw err;
         });
     });
 
@@ -39,7 +39,7 @@ describe("Message", () => {
         expect(res).to.have.status(200);
         expect(res.body).to.include({ sender: message.sender, text: message.text });
       })
-      .catch((err) => {
+      .catch((err: any) => {
         throw err;
       });
     });
@@ -49,14 +49,14 @@ describe("Message", () => {
       .get(`/messages/${message._id}`)
       .then((res) => {
         Message.findById(ObjectId(message._id))
-        .then((result) => {
+        .then((result: any) => {
           expect(result).to.be.null;
         })
-        .catch((err) => {
-          throw(err);
+        .catch((err: any) => {
+          throw err;
         });
       })
-      .catch((err) => {
+      .catch((err: any) => {
         throw err;
       });
     });
@@ -76,7 +76,7 @@ describe("Message", () => {
       .send(messageData)
       .then((res) => {
         Message.findById(ObjectId(res.body._id))
-        .then((result) => {
+        .then((result: any) => {
           expect(result.text).to.equal(messageData.text);
         });
       })
@@ -87,4 +87,10 @@ describe("Message", () => {
 
   });
 
+});
+
+after((done) => {
+  mongoose.connection.db.dropDatabase((err) => {
+    done();
+  });
 });
